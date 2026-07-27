@@ -96,50 +96,86 @@ DeviceNetworkEvents
 
 ## Chronological Event Timeline 
 
-### 1. File Download - TOR Installer
+### 1. Tor Browser Threat Hunt Timeline Report
+Device: andrewgay-threa
+ User: andrewcyber
+ Date: July 27, 2026
+Chronological Timeline
+11:10:14 AM – Tor Browser installer executed
+The earliest evidence of Tor Browser activity was the execution of tor-browser-windows-x86_64-portable-15.0.19.exe from the user's Downloads directory. Microsoft Defender recorded the installer being launched with the command line:
+tor-browser-windows-x86_64-portable-15.0.19.exe /S
+The /S switch indicates the installer was executed in silent mode, suppressing the normal installation prompts. Defender also recorded the installer SHA-256 hash:
+0d4cc3a7b734a10c500217fb0df89452ee39185709193966831677bbd43c98f8
+This confirmed the beginning of the Tor Browser installation.
 
-- **Timestamp:** `2024-11-08T22:14:48.6065231Z`
-- **Event:** The user "employee" downloaded a file named `tor-browser-windows-x86_64-portable-14.0.1.exe` to the Downloads folder.
-- **Action:** File download detected.
-- **File Path:** `C:\Users\employee\Downloads\tor-browser-windows-x86_64-portable-14.0.1.exe`
+11:10:31 AM – 11:11:40 AM – Tor Browser files created
+Reviewing DeviceFileEvents showed numerous Tor-related files being created shortly after the installer executed. The activity indicated that the installer extracted the portable Tor Browser files and copied components onto the user's Desktop.
+Artifacts observed included:
+tor.exe
+Tor Browser.lnk
+Tor-Launcher.txt
+tor-shopping-list.txt
+tor-shopping-list.lnk
+The presence of tor-shopping-list.txt and its shortcut suggests the user created or interacted with a text document after Tor Browser had been installed.
 
-### 2. Process Execution - TOR Browser Installation
+11:10:40 AM – Installer process completion
+A second process event associated with the installer was recorded, confirming successful completion of the installation process before the browser was launched.
 
-- **Timestamp:** `2024-11-08T22:16:47.4484567Z`
-- **Event:** The user "employee" executed the file `tor-browser-windows-x86_64-portable-14.0.1.exe` in silent mode, initiating a background installation of the TOR Browser.
-- **Action:** Process creation detected.
-- **Command:** `tor-browser-windows-x86_64-portable-14.0.1.exe /S`
-- **File Path:** `C:\Users\employee\Downloads\tor-browser-windows-x86_64-portable-14.0.1.exe`
+11:11:29 AM – Tor Browser launched
+Process creation events showed the user launching Tor Browser (firefox.exe) from:
+C:\Users\andrewcyber\Desktop\Tor Browser\Browser\
+Immediately after launch, Microsoft Defender recorded numerous child processes including:
+firefox.exe
+tor.exe
+Firefox content processes
+GPU process
+Utility process
+Renderer processes
+The spawning of these child processes is consistent with normal Tor Browser initialization.
 
-### 3. Process Execution - TOR Browser Launch
+11:11:42 AM – Tor service initialized
+The tor.exe process started using its standard Tor configuration files located within the Tor Browser directory.
+The recorded command line showed Tor creating:
+Local SOCKS proxy on 127.0.0.1:9150
+Local Control Port on 127.0.0.1:9151
+These ports are standard for Tor Browser and indicate the Tor service initialized successfully.
 
-- **Timestamp:** `2024-11-08T22:17:21.6357935Z`
-- **Event:** User "employee" opened the TOR browser. Subsequent processes associated with TOR browser, such as `firefox.exe` and `tor.exe`, were also created, indicating that the browser launched successfully.
-- **Action:** Process creation of TOR browser-related executables detected.
-- **File Path:** `C:\Users\employee\Desktop\Tor Browser\Browser\TorBrowser\Tor\tor.exe`
+11:11:47 AM – 11:11:51 AM – Initial outbound Tor network connections
+Within seconds of the Tor service starting, tor.exe successfully established multiple encrypted outbound connections over TCP port 443 to external systems.
+Connections included:
+193.187.91.79
+91.214.191.60
+51.89.81.247
+Microsoft Defender also recorded several associated remote URLs. These successful outbound TLS connections indicate Tor began communicating with external Tor infrastructure to establish its circuits.
 
-### 4. Network Connection - TOR Network
+11:12:08 AM – Firefox connected to the local Tor proxy
+The Tor Browser process (firefox.exe) successfully connected to:
+127.0.0.1:9150
+This local connection confirms the browser was successfully communicating with the locally running Tor SOCKS proxy, allowing browser traffic to be routed through the Tor network.
 
-- **Timestamp:** `2024-11-08T22:18:01.1246358Z`
-- **Event:** A network connection to IP `176.198.159.33` on port `9001` by user "employee" was established using `tor.exe`, confirming TOR browser network activity.
-- **Action:** Connection success.
-- **Process:** `tor.exe`
-- **File Path:** `c:\users\employee\desktop\tor browser\browser\torbrowser\tor\tor.exe`
+11:12:47 AM – 11:15:02 AM – Continued browser activity
+Additional Firefox content processes were created as browsing activity continued. These processes represent additional browser tabs and renderer processes that are expected during normal Tor Browser operation.
 
-### 5. Additional Network Connections - TOR Browser Activity
+11:15:05 AM – Local proxy connection failure
+One network event showed firefox.exe experiencing a failed connection attempt to:
+127.0.0.1:9150
+Although this indicates a temporary communication failure between Firefox and the local Tor proxy, it does not appear to have prevented continued Tor usage because additional Tor activity occurred afterward.
 
-- **Timestamps:**
-  - `2024-11-08T22:18:08Z` - Connected to `194.164.169.85` on port `443`.
-  - `2024-11-08T22:18:16Z` - Local connection to `127.0.0.1` on port `9150`.
-- **Event:** Additional TOR network connections were established, indicating ongoing activity by user "employee" through the TOR browser.
-- **Action:** Multiple successful connections detected.
+11:20:16 AM – 11:20:19 AM – Tor Browser reopened
+A second sequence of process creation events was observed.
+Microsoft Defender recorded:
+firefox.exe launching again
+tor.exe starting again
+Multiple Firefox child processes being created
+This indicates the user reopened Tor Browser or started a second browser session.
 
-### 6. File Creation - TOR Shopping List
+11:20:26 AM – Additional outbound Tor connections
+Following the second launch, tor.exe again established successful outbound encrypted connections over TCP port 443 to external Tor infrastructure, including:
+51.89.81.247
+91.214.191.60
+These successful network connections demonstrate the second Tor Browser session also successfully connected to the Tor network.
 
-- **Timestamp:** `2024-11-08T22:27:19.7259964Z`
-- **Event:** The user "employee" created a file named `tor-shopping-list.txt` on the desktop, potentially indicating a list or notes related to their TOR browser activities.
-- **Action:** File creation detected.
-- **File Path:** `C:\Users\employee\Desktop\tor-shopping-list.txt`
+
 
 ---
 
