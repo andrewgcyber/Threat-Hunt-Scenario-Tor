@@ -181,12 +181,14 @@ These successful network connections demonstrate the second Tor Browser session 
 
 ## Summary
 
-The user "employee" on the "threat-hunt-lab" device initiated and completed the installation of the TOR browser. They proceeded to launch the browser, establish connections within the TOR network, and created various files related to TOR on their desktop, including a file named `tor-shopping-list.txt`. This sequence of activities indicates that the user actively installed, configured, and used the TOR browser, likely for anonymous browsing purposes, with possible documentation in the form of the "shopping list" file.
+The evidence shows that andrewcyber executed the Tor Browser Portable 15.0.19 installer in silent mode, resulting in the successful extraction and creation of multiple Tor Browser artifacts on the endpoint, including tor.exe, Tor Browser.lnk, Tor-Launcher.txt, and a user-created file named tor-shopping-list.txt. Shortly after installation, the user launched Tor Browser, causing firefox.exe and tor.exe to execute along with the expected browser child processes. The Tor service initialized successfully by creating the standard local SOCKS proxy (127.0.0.1:9150) and Control Port (127.0.0.1:9151), after which tor.exe established multiple encrypted outbound connections over TCP port 443 to external Tor infrastructure. Defender also recorded firefox.exe successfully communicating with the local Tor proxy on 127.0.0.1:9150, confirming browser traffic was being routed through the Tor service. A later set of process and network events showed the browser being launched again, followed by another successful series of outbound Tor connections. Overall, the collected telemetry confirms the successful installation, execution, and active use of Tor Browser on the endpoint during the investigation period. 
+
 
 ---
 
 ## Response Taken
 
-TOR usage was confirmed on the endpoint `threat-hunt-lab` by the user `employee`. The device was isolated, and the user's direct manager was notified.
+TOR usage was confirmed on endpoint andrewgay-threa by the user “andrewcyber”. The device was isolated and the user's direct manager was notified.
+
 
 ---
