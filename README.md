@@ -183,6 +183,11 @@ These successful network connections demonstrate the second Tor Browser session 
 
 The evidence shows that andrewcyber executed the Tor Browser Portable 15.0.19 installer in silent mode, resulting in the successful extraction and creation of multiple Tor Browser artifacts on the endpoint, including tor.exe, Tor Browser.lnk, Tor-Launcher.txt, and a user-created file named tor-shopping-list.txt. Shortly after installation, the user launched Tor Browser, causing firefox.exe and tor.exe to execute along with the expected browser child processes. The Tor service initialized successfully by creating the standard local SOCKS proxy (127.0.0.1:9150) and Control Port (127.0.0.1:9151), after which tor.exe established multiple encrypted outbound connections over TCP port 443 to external Tor infrastructure. Defender also recorded firefox.exe successfully communicating with the local Tor proxy on 127.0.0.1:9150, confirming browser traffic was being routed through the Tor service. A later set of process and network events showed the browser being launched again, followed by another successful series of outbound Tor connections. Overall, the collected telemetry confirms the successful installation, execution, and active use of Tor Browser on the endpoint during the investigation period. 
 
+<img width="1681" height="758" alt="Screenshot 2026-07-27 113305" src="https://github.com/user-attachments/assets/18cd8b49-864a-4698-9ba1-2ed3be3f628d" />
+<img width="1382" height="632" alt="Screenshot 2026-07-27 113346" src="https://github.com/user-attachments/assets/ae77f771-a740-416b-97cf-c8370d3ca195" />
+<img width="1442" height="677" alt="Screenshot 2026-07-27 113504" src="https://github.com/user-attachments/assets/d5c0be3d-4163-4b1b-a389-b796c32787eb" />
+
+
 
 ---
 
